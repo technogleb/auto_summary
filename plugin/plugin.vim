@@ -29,7 +29,6 @@ from pathlib import Path
 plugin_root_dir = vim.eval('s:plugin_root_dir')
 python_root_dir = Path(str(plugin_root_dir)) / '..' / 'auto_summary'
 sys.path.insert(0, str(python_root_dir.resolve()))
-import test_vim
 import generate_summary
 EOF
 
