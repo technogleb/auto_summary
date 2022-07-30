@@ -1,9 +1,20 @@
-'''This script generates recursive summary for directory tree of markdown files'''
+'''
+This script recursively generates table of contents(or summary) for directory
+tree of markdown files
+'''
 from collections import defaultdict
 from pathlib import Path
 
 
 def get_markdown_tree(path: Path) -> dict[Path, list[Path]]:
+    '''
+    Scans all filetree with root located in `path`, bottom-to-top, and collects mapping of
+    the following format: path_to_dir --> paths_to_its_markdown_files.
+
+    If directory contains sub-folder, which recursively contains .md files, this
+    sub-folder is also added to the mapping with the following link
+    path_to_sub-folder/sub-folder_name.md
+    '''
     # gets all files recursively, sorted by nesting level and parent name
     all_paths = reversed(list(path.glob('**/*')))
 
@@ -18,9 +29,9 @@ def get_markdown_tree(path: Path) -> dict[Path, list[Path]]:
             markdown_tree[path_.parent].add(path_)
         elif path_ in has_markdown:
             # if dir contains(or recursively contains) md files, it should also be added
-            # into its parents' SUMMARY.md. This way, we add link to its inner summary,
-            # e.q. path_/SUMMARY.md
-            markdown_tree[path_.parent].add(path_/'SUMMARY.md')
+            # into its parents' summary. This way, we add link to its inner summary,
+            # e.q. path_/path_stem.md, actual file will be created later
+            markdown_tree[path_.parent].add(path_ / f'{_unify_dir_name(path_.stem)}.md')
 
     return markdown_tree
 
@@ -48,7 +59,7 @@ def generate_summary(md_files: set[Path], root: Path, wikilinks=True):
         # make path relative to root and get rid of suffix
         root_relative_path = Path(*md_file_path.parts[len(root.parents)+1:])
         root_relative_path = root_relative_path.with_suffix('')
-        if root_relative_path.stem == 'SUMMARY':
+        if root_relative_path.stem == _unify_dir_name(f'{root_relative_path.parent.stem}'):
             name = root_relative_path.parent.stem
         else:
             name = root_relative_path.stem.replace('_', ' ').capitalize()
@@ -59,13 +70,20 @@ def generate_summary(md_files: set[Path], root: Path, wikilinks=True):
 
 def write_summary(summary_dir: Path, summary: str):
     '''Writes summary to SUMMARY.md in directory root'''
-    with open(summary_dir / 'SUMMARY.md', 'w') as f:
+    with open(summary_dir / f'{_unify_dir_name(summary_dir.stem)}.md', 'w') as f:
         f.write(summary)
 
 
-if __name__ == "__main__":
-    tree = get_markdown_tree(Path('/Users/technogleb/knowledge_base'))
+def main(root: Path, wikilinks=True):
+    tree = get_markdown_tree(root)
     for dir_, md_files in tree.items():
-        summary = generate_summary(md_files, Path('/Users/technogleb/knowledge_base'))
+        summary = generate_summary(md_files, root, wikilinks=wikilinks)
         write_summary(dir_, summary)
 
+
+def _unify_dir_name(filename):
+    return filename.replace(' ', '').upper()
+
+
+if __name__ == "__main__":
+    main(Path('/Users/technogleb/knowledge_base'))
