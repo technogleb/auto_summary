@@ -115,3 +115,10 @@ data/
 
 #Idea
 .idea/
+
+# flake8 local config
+.flake8
+
+# you_complete_me vim plugin config for site-packages
+.ycm_extra_conf.py
+
