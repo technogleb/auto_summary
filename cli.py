@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from generate_summary import main
+from auto_summary.generate_summary import main
 
 
 def run_parser():
