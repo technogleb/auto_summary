@@ -34,8 +34,7 @@ class AutosummaryEventHandler(FileSystemEventHandler):
             self.logger.info('Summary is updated')
 
 
-def main():
-    path = sys.argv[1] if len(sys.argv) > 1 else '.'
+def watch(path: Path):
     event_handler = AutosummaryEventHandler(path)
     observer = Observer()
     observer.schedule(event_handler, path, recursive=True)
@@ -45,5 +44,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    path = Path(sys.argv[1] if len(sys.argv) > 1 else '.').resolve()
+    watch(path)
 
