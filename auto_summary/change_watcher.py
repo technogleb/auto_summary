@@ -34,13 +34,16 @@ class AutosummaryEventHandler(FileSystemEventHandler):
             self.logger.info('Summary is updated')
 
 
-def watch(path: Path):
+def watch(path: Path, join=False):
     event_handler = AutosummaryEventHandler(path)
     observer = Observer()
     observer.schedule(event_handler, path, recursive=True)
     observer.schedule(LoggingEventHandler(), path, recursive=True)
     observer.start()
-    observer.join()
+    # set join=True, when you run this as standalone script. Running from vim, for example
+    # needs main thread to be free, so join=False
+    if join:
+        observer.join()
 
 
 if __name__ == '__main__':
