@@ -31,7 +31,7 @@ Auto Summary is availiable as a standalone **python script** and as **vim plugin
 watchdog
 
 ```
-pip install -r requirements.txt
+pip3 install -r ~/auto_summary/requirements.txt
 ```
 
 #### Use
