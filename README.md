@@ -1,11 +1,14 @@
-# Automatically generate table of contents for a file tree containing markdown files
+# Automatically generate for a file tree containing markdown files
 
-Auto Summary allows to generate **table of contents** files for directory (and its
+Auto Summary allows to generate **SUMMARY** files for directory (and its
 subdirectories) containing Markdown files. This can be useful for maintaining personal
 knowledge database or team wiki. Auto summary can also watch your filetree and update all 
 links on any file change, such as renaming, moving file around, deleting etc...
 
 Auto Summary is availiable as a standalone **python script** and as **vim plugin**. 
+
+Auto Summary creates \<DIRNAME\>.md files for every directory and its subdirectories, where
+it finds markdown files, where DIRNAME is current directory name. See example below.
 
 ![demo](static/auto_summary_demo_simple.gif)
 
@@ -36,7 +39,7 @@ pip3 install -r ~/auto_summary/requirements.txt
 
 #### Use
 
-1. Generate table of content
+1. Generate SUMMARY
 
 ```python
 python3 ~/auto_summary/cli.py -r path/to/your/markdown/root
@@ -115,12 +118,12 @@ pip3 install -r ~/.vim/bundle/auto_summary/requirements.txt
 
 #### Use Plugin
 
-1. Generate table of contents
+1. Generate SUMMARY
 
-`:Summarize` - generates table of contents, starting from your session root - i.e. where
+`:Summarize` - generates SUMMARY, starting from your session root - i.e. where
 you started your current vim session
 
-`:Summarize <path/to/root>` - generates table of contents, starting from path specified
+`:Summarize <path/to/root>` - generates SUMMARY, starting from path specified
 
 2. Automatically watch for changes
 
