@@ -36,7 +36,7 @@ def get_markdown_tree(path: Path) -> dict[Path, list[Path]]:
     return markdown_tree
 
 
-def generate_summary(md_files: set[Path], root: Path, wikilinks=True):
+def generate_summary(md_files: set[Path], root: Path, wikilinks=True) -> str:
     '''
     Generates SUMMARY.md for markdown files provide.
 
@@ -60,10 +60,16 @@ def generate_summary(md_files: set[Path], root: Path, wikilinks=True):
         root_relative_path = Path(*md_file_path.parts[len(root.parents)+1:])
         root_relative_path = root_relative_path.with_suffix('')
         if root_relative_path.stem == _unify_dir_name(f'{root_relative_path.parent.stem}'):
-            name = root_relative_path.parent.stem
+            # paths to folders should end with /
+            name = root_relative_path.parent.stem + '/'
         else:
             name = root_relative_path.stem.replace('_', ' ').capitalize()
-        links.append(link_format.format(text=name, link=root_relative_path))
+
+        link: str = link_format.format(text=name, link=root_relative_path)
+        links.append(link)
+
+    # alphabetically sort links
+    links.sort()
 
     return '\n'.join(links)
 
@@ -86,4 +92,5 @@ def _unify_dir_name(filename):
 
 
 if __name__ == "__main__":
-    main(Path('/Users/technogleb/knowledge_base'))
+    from pprint import pprint
+    pprint(get_markdown_tree(Path('/Users/technogleb/knowledge_base')))
